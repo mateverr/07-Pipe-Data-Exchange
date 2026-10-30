@@ -13,14 +13,14 @@ int main(void){
   memset(buffer, '\0', sizeof(buffer));
 
   if(pipe(pipeFD) == 0){
-    pid = fork();
+    pid = fork(); // Create a child process
     switch(pid){
-      case -1:
+      case -1: // IF failed exit
         fprintf(stderr, "Fork failed\n");
         exit(EXIT_FAILURE);
-      case 0:  // read
+      case 0:  // read, return 0 means that this is a child process
         sprintf(buffer, "%d", pipeFD[0]);  // print content pipe[0] into buffer
-        execl("./read", "read", buffer, (char *)0);  // (char *)0 -> pointer to NULL // use buffer as an argv[1]
+        execl("./pipeRead", "pipeRead", buffer, (char *)0);  // (char *)0 -> pointer to NULL // use buffer as an argv[1]
         exit(EXIT_SUCCESS);
       default:  // write
         n_bytes = write(pipeFD[1], data, strlen(data));  // write data into pipeFD[1] (write pipe)
